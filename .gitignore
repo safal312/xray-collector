@@ -1,2 +1,9 @@
 env
 __pycache__
+.env
+*.pkl
+1_get_links/all_pages/
+3_get_xray/metadata
+3_get_xray/xrays
+cleanup_filenames.py
+rename_files.py
