@@ -8,6 +8,9 @@ def extract_remaining(main_df):
     return df
 
 def get_remaining_xrays(main_df):
+    if not os.path.exists("./xrays"): os.mkdir("./xrays")
+    if not os.path.exists("./xrays/com"): os.mkdir("./xrays/com")
+
     files = os.listdir("./xrays/com")
 
     main_df['fname'] = main_df['file'].str.replace(".html", "")
