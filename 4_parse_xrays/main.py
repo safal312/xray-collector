@@ -22,6 +22,7 @@ for dir in dirs:
     if len(os.listdir(os.path.join(xrays_dir, dir))) < 2:
         # shutil.rmtree(os.path.join(xrays_dir, dir))
         print(dir)
+        continue
 
     print(f"Parsing Xray for {dir}...")
     pb_filepath = os.path.join(xrays_dir, dir, playback_file)

@@ -8,6 +8,9 @@ import math
 import threading
 import shutil
 import asyncio
+import concurrent.futures
+from multiprocessing import Process
+from threading import Thread
 
 import pandas as pd
 import numpy as np
@@ -35,6 +38,10 @@ class XrayScraper(Scraper):
 
     def get_driver(self):
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.options, seleniumwire_options=self.wire_options)
+        driver.scopes = [
+            "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources",
+            "https://atv-ps.amazon.com/swift/page/xrayVOD"
+        ]
         self.driver = driver
         return driver
 
@@ -112,95 +119,67 @@ class XrayScraper(Scraper):
         
         print("Scraping done for this chunk")
 
-    async def check_for_ad(self, driver):
+    def check_for_ad(self, driver):
         # //*[@id="dv-web-player"]/div/div[1]/div/div/div[2]/div/div/div/div/div[1]/div[5]/div[2]/div[2]/div/div[2]/div[2]
+        # //*[@id="dv-web-player"]/div/div[1]/div/div/div[2]/div/div/div/div/div[1]/div[5]/div[2]/div[2]/div/div[2]/div
         print("Checking if there's an ad...")
+
+        try:
+            skipbtn = WebDriverWait(driver, self.waittime * 2).until(
+                EC.presence_of_element_located((By.XPATH, "//div[text()='Skip']"))
+            )
+            print("Found skip button, clicking...")
+            print(skipbtn)
+            print(skipbtn.get_attribute('innerText'))
+            
+            actions = ActionChains(driver)
+            print("Moving to button...")
+            actions.move_to_element(skipbtn)
+            print("Clicking...")
+            actions.click(skipbtn).perform()
+            # skipbtn.click()
+            print("Button clicked")
+        except:
+            print("Didn't find skipbtn")
         
+    def capture_resources(self, driver, dir_name):
+        counter = 0
+        while True:
+            print(f"Capture Resources {counter}...")
+            # self.check_for_ad(driver)
+            print("Look for the resources")
+            try:
+                # gathering the playback resources
+                req_pb = driver.wait_for_request("https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources", timeout=self.waittime * 2)
+                with open(os.path.join(dir_name, "PlaybackResources.json"), 'wb') as f:
+                    f.write(((req_pb.response.body)))
+            except:
+                print("Error in getting the playback resources")
+            
+            # print("Look for skip btn")
+            t = Thread(target=self.check_for_ad, args=(driver,), daemon=True)
+            t.start()
+            # self.check_for_ad(driver)
 
-        # # check if the sdk is loaded
-        # WebDriverWait(driver, self.waittime).until(
-        #     EC.presence_of_element_located((By.CLASS_NAME, 'webPlayerSDKContainer'))
-        # )
-        # print("The video sdk is loaded")
+            try:
+                print("Looking for xray...")
+                # get the xray data
+                req_xray = driver.wait_for_request("https://atv-ps.amazon.com/swift/page/xrayVOD", timeout=self.waittime * 2)
+                with open(os.path.join(dir_name, "Xray.json"), 'wb') as f:
+                    f.write(((req_xray.response.body)))
+                print("Got all resources")
+                print("Finishing up search for skip...")
+                t.join()
+                break
+            except:
+                counter += 1
+                if counter >= 3: break 
+                driver.refresh()
+                print("Error in getting the xray data")
+                print("Finishing up search for skip...")
+                t.join()
 
-        # ac = ActionChains(driver)
 
-        # # text title
-        # print("Title visible...")
-        # title =  WebDriverWait(driver, 5 * 60).until(
-        #     EC.visibility_of_element_located((By.CLASS_NAME, 'atvwebplayersdk-title-text'))
-        # )
-
-        # title_invisible =  WebDriverWait(driver, 5 * 60).until(
-        #     EC.invisibility_of_element_located((By.CLASS_NAME, 'atvwebplayersdk-title-text'))
-        # )
-        # print("Title invisible...")
-
-        # try:
-        #     skipbtn = WebDriverWait(driver, 2 * 60).until(
-        #         EC.presence_of_element_located((By.XPATH, '//div[text()="Skip"]'))
-        #     )
-        #     print("Skip btn present...")
-        #     skipbtn.click()
-        # except:
-        #     print("Skip button not found")
-
-        
-        # try:
-        #     seekbar_loaded = WebDriverWait(driver, 2 * 60).until(
-        #         EC.presence_of_element_located((By.CLASS_NAME, 'atvwebplayersdk-infobar-container'))
-        #     )
-        #     print(" Video loaded...")
-
-        #     playbtn = WebDriverWait(driver, 60).until(
-        #         EC.presence_of_element_located((By.CSS_SELECTOR, "atvwebplayersdk-playpause-button"))
-        #     )
-
-        #     ac = ActionChains(driver)
-        #     ac.move_to_element(playbtn).click().perform()
-
-        #     print("Pressed playbtn")
-        #     print(playbtn)
-        # except:
-        #     print("Skip button not found")
-        # print("Title Loaded ...")
-
-        # loading_done = WebDriverWait(driver, 5 * 60).until(
-        #     EC.invisibility_of_element_located((By.CLASS_NAME, "atvwebplayersdk-loadingspinner-overlay"))
-        # )
-        # print("Loading complete...")
-
-        # playbtn = WebDriverWait(driver, 60).until(
-        #     EC.presence_of_element_located((By.CSS_SELECTOR, "atvwebplayersdk-playpause-button"))
-        # )
-
-        # print("Moving to play btn...")
-        # ac.move_to_element(playbtn).perform()
-
-        # time.sleep(2)
-        # print("Play button visible")
-        # playbtn.click()
-        # print("Pushing btn...")
-
-        # while True:
-        #     try:
-        #         # playbtn = WebDriverWait(driver, 120).until(
-        #         #     EC.presence_of_element_located(By.CLASS_NAME, "atvwebplayersdk-playpause-button")
-        #         # )
-        #         # playbtn.click()
-        #         # print("Looking for skip button...")
-        #         skip_container = WebDriverWait(driver, 120).until(
-        #             EC.presence_of_element_located((By.XPATH, '//div[text()="Skip"]'))
-        #         )
-        #         skip_container.click()
-        #         return 1
-        #     except:
-        #         return 
-        #         # counter += 1
-        #         # driver.refresh()
-        #         # if counter >= 2: return 0
-        #         # print("Didn't find the skip button")
-    
     def extract_xray_and_playbackresources(self, df, driver):
         self.sign_in("https://www.amazon.com/gp/sign-in.html", driver)
 
@@ -215,6 +194,9 @@ class XrayScraper(Scraper):
 
             dir_name = "xrays/com/" + row['fname']
 
+            # play btn
+            # document.querySelector('.dv-dp-node-playback')
+
             try:
                 # if the directory already exists, remove it
                 if os.path.exists(dir_name):
@@ -222,60 +204,22 @@ class XrayScraper(Scraper):
                 os.mkdir(dir_name)
             except:
                 print("Error in handling the directory")
+            
+            # first check if movie playable
+            # document.querySelector('#tvod-btn-ab-movie-hd-tvod_rental')
+            try:
+                WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CLASS_NAME, 'dv-dp-node-playback'))
+                )
+                print("Content is playable...\n")
+            except:
+                print("Play button not found, skip...", dir_name)
+                continue
 
-            # run asynchronous search for skip button
+            self.capture_resources(driver, dir_name)
 
-            counter = 0
-            while True:
-                try:
-                    # gathering the playback resources
-                    req_pb = driver.wait_for_request("https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources", timeout=self.waittime * 2)
-                    with open(os.path.join(dir_name, "PlaybackResources.json"), 'wb') as f:
-                        f.write(((req_pb.response.body)))
-                except:
-                    print("Error in getting the playback resources")
-                
-                try:
-                    # get the xray data
-                    req_xray = driver.wait_for_request("https://atv-ps.amazon.com/swift/page/xrayVOD", timeout=self.waittime * 2)
-                    with open(os.path.join(dir_name, "Xray.json"), 'wb') as f:
-                        f.write(((req_xray.response.body)))
-                    
-                    break
-                except:
-                    counter += 1
-                    if counter >= 3: break 
-                    driver.refresh()
-                    print("Error in getting the xray data")
-                
             # missing this line ruins lives
             del driver.requests
-
-            # try:
-            #     for index, request in enumerate(driver.requests):
-            #         if request.response:
-            #             if "https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources" in request.url:
-            #                 print(request.url)
-            #                 del driver.requests[index]
-            #                 print("deleted cached pb")
-
-            #             if "https://atv-ps.amazon.com/swift/page/xrayVOD" in request.url:
-            #                 print(request.url)
-            #                 del driver.requests[index]
-            #                 print("deleted cached xray")
-
-
-            #         # if request.url.includes("https://atv-ps.amazon.com/cdp/catalog/GetPlaybackResources"):
-            #         #     print(request)
-                    
-            #         # if request.url.includes("https://atv-ps.amazon.com/swift/page/xrayVOD"):
-            #         #     print(request)
-            # except:
-            #     print("Can't delete")
-
-                # print(driver.requests.index(req_pb))
-                # print(driver.requests.index(req_xray))
-                # del driver.requests
             
         print("Scraping done for this chunk")
 
