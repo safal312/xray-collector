@@ -4,6 +4,7 @@ import os
 import time
 import pickle
 import sys
+import csv
 import math
 import threading
 import shutil
@@ -26,6 +27,7 @@ from seleniumwire import webdriver
 from seleniumwire.utils import decode
 
 from AmazonPrimeScraper import Scraper
+from AmazonPrimeScraper import Logger
 
 class XrayScraper(Scraper):
     def __init__(self, headless=True, workers=1):
@@ -35,6 +37,7 @@ class XrayScraper(Scraper):
         }
         self.WORKERS = workers
         self.waittime = 60
+        self.logger = Logger("log.txt")
 
     def get_driver(self):
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.options, seleniumwire_options=self.wire_options)
@@ -72,11 +75,14 @@ class XrayScraper(Scraper):
 
         self.get_element_with_id("signInSubmit").click()
 
-        otp = self.get_element_with_id("auth-mfa-otpcode")
-        otp_value  = input("Enter OTP: ")
-        otp.send_keys(otp_value)
+        try:
+            otp = self.get_element_with_id("auth-mfa-otpcode")
+            otp_value  = input("Enter OTP: ")
+            otp.send_keys(otp_value)
 
-        self.get_element_with_id("auth-signin-button").click()
+            self.get_element_with_id("auth-signin-button").click()
+        except:
+            print("OTP not needed")
 
         time.sleep(5)
 
@@ -97,23 +103,36 @@ class XrayScraper(Scraper):
             pickle.dump(driver.get_cookies(), open("cookies.pkl", "wb"))
         except:
             pass
+    
+    # def save_missings(self):
+    #     mode = "a" if os.path.exists("./missing_data/com/missing_movies.csv") else "w"
 
-    def scrape_metadata(self, df, driver):
+    #     with open("./missing_data/com/missing_movies.csv", mode) as f:
+    #         writer = csv.writer(f)
+
+    def scrape_metadata(self, df, driver, SAVE_DIR):
         self.sign_in("https://www.amazon.com/gp/sign-in.html", driver)
         
         for index, row in df.iterrows():
             link = "https://www.amazon.com" + row['link']
             title = row['fname']
-            driver.get(link)
+
+            # loop couple of times if the link is stuck
+            try:
+                driver.get(link)
+                # break
+            except:
+                print("Getting some error getting link")
+                    # counter += 1
 
             self.check_captcha(driver)
 
             content = driver.page_source
-
             try:
-                with open(f"metadata/com/{title}.html", "w", encoding='utf-8') as f:
+                with open(f"metadata/{SAVE_DIR}/{title}.html", "w", encoding='utf-8') as f:
                     f.write(content)
                     print("Writing " + title)
+                    # break
             except:
                 print("There was an error in downloading " + title)
         
@@ -123,7 +142,6 @@ class XrayScraper(Scraper):
         # //*[@id="dv-web-player"]/div/div[1]/div/div/div[2]/div/div/div/div/div[1]/div[5]/div[2]/div[2]/div/div[2]/div[2]
         # //*[@id="dv-web-player"]/div/div[1]/div/div/div[2]/div/div/div/div/div[1]/div[5]/div[2]/div[2]/div/div[2]/div
         print("Checking if there's an ad...")
-
         try:
             skipbtn = WebDriverWait(driver, self.waittime * 2).until(
                 EC.presence_of_element_located((By.XPATH, "//div[text()='Skip']"))
@@ -141,8 +159,32 @@ class XrayScraper(Scraper):
             print("Button clicked")
         except:
             print("Didn't find skipbtn")
+    
+    def check_for_freevee(self, driver):
+        print("Checking for freevee")
+        try:
+            # atvwebplayersdk-adtimeindicator-text  this is for the freevee
+            print("Looking for the freevee ad...")
+            freevee_btn = WebDriverWait(driver, self.waittime * 2).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "atvwebplayersdk-adtimeindicator-text"))
+            )
+            # atvwebplayersdk-playpause-button
+            print("Looking for play button")
+            playbtn = WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "atvwebplayersdk-playpause-button"))
+            )
+
+            print("Clicking on play button")
+            actions = ActionChains(driver)
+            print("Moving to button...")
+            actions.move_to_element(playbtn)
+            print("Clicking...")
+            actions.click(playbtn).perform()
+            print("Play btn clicked")
+        except:
+            print("Didn't find freevee ad or can't click on it")
         
-    def capture_resources(self, driver, dir_name):
+    def capture_resources(self, driver, dir_name, is_freevee):
         counter = 0
         while True:
             print(f"Capture Resources {counter}...")
@@ -157,7 +199,10 @@ class XrayScraper(Scraper):
                 print("Error in getting the playback resources")
             
             # print("Look for skip btn")
-            t = Thread(target=self.check_for_ad, args=(driver,), daemon=True)
+            if is_freevee:
+                t = Thread(target=self.check_for_freevee, args=(driver,), daemon=True)
+            else:
+                t = Thread(target=self.check_for_ad, args=(driver,), daemon=True)
             t.start()
             # self.check_for_ad(driver)
 
@@ -173,17 +218,23 @@ class XrayScraper(Scraper):
                 break
             except:
                 counter += 1
-                if counter >= 3: break 
+                if counter >= 3: 
+                    self.logger.save_log([dir_name, "Couldn't get the files"])
+                    break 
                 driver.refresh()
                 print("Error in getting the xray data")
                 print("Finishing up search for skip...")
                 t.join()
 
 
-    def extract_xray_and_playbackresources(self, df, driver):
+    def extract_xray_and_playbackresources(self, df, driver, SAVE_DIR):
         self.sign_in("https://www.amazon.com/gp/sign-in.html", driver)
 
         for index, row in df.iterrows():
+            if 'xray_present' in df.columns:
+                if row['xray_present'] == 0:
+                    continue
+
             link = "https://www.amazon.com" + row['link']
             title = row['fname']
             driver.get(link)
@@ -192,10 +243,8 @@ class XrayScraper(Scraper):
             # self.check_for_ad(driver)
             # if return_val == 0: continue
 
-            dir_name = "xrays/com/" + row['fname']
-
-            # play btn
-            # document.querySelector('.dv-dp-node-playback')
+            dir_name = f"xrays/{SAVE_DIR}/" + row['fname']
+            if not os.path.exists(f"xrays/{SAVE_DIR}/"): os.mkdir(f"xrays/{SAVE_DIR}/")
 
             try:
                 # if the directory already exists, remove it
@@ -211,12 +260,27 @@ class XrayScraper(Scraper):
                 WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.CLASS_NAME, 'dv-dp-node-playback'))
                 )
+                
                 print("Content is playable...\n")
             except:
                 print("Play button not found, skip...", dir_name)
+                self.logger.save_log([dir_name, "Play btn not found"])
+                # self.save_missings(dir_name)
                 continue
+            
+            # Check for Free with ads on Freevee
+            is_freevee = False
+            try:
+                freevee = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located((By.XPATH, "//span[text()='Free with ads on Freevee']"))
+                )
+                print("Seems like a freevee content")
+                is_freevee = True
+            except:
+                print("Doesn't seem like a freevee content")
+                is_freevee = False
 
-            self.capture_resources(driver, dir_name)
+            self.capture_resources(driver, dir_name, is_freevee)
 
             # missing this line ruins lives
             del driver.requests
@@ -224,7 +288,7 @@ class XrayScraper(Scraper):
         print("Scraping done for this chunk")
 
     # https://medium.com/geekculture/introduction-to-selenium-and-python-multi-threading-module-aa5b1c4386cb
-    def run_workers(self, main_df, FOR):
+    def run_workers(self, main_df, FOR, SAVE_DIR):
         files = np.array_split(main_df, self.WORKERS)
 
         drivers = [self.get_driver() for _ in range(self.WORKERS)]
@@ -236,6 +300,6 @@ class XrayScraper(Scraper):
             elif FOR == "xrays":
                 handler = self.extract_xray_and_playbackresources
             
-            executor.map(handler, files, drivers)
+            executor.map(handler, files, drivers, [SAVE_DIR]*self.WORKERS)
         
         [driver.quit() for driver in drivers]

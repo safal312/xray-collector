@@ -10,7 +10,7 @@ class AmazonPagesHandler:
         self.save_to = save_to
     
     def save_metadata(self):
-        with open(self.save_to, "w", newline='') as f:
+        with open(self.save_to, "w", newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
             writer.writerows(self.parsed)
     

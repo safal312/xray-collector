@@ -6,5 +6,6 @@ __pycache__
 3_get_xray/metadata
 3_get_xray/xrays
 4_parse_xrays/parsed_xrays
+5_get_subtitles/subtitles
 cleanup_filenames.py
 rename_files.py

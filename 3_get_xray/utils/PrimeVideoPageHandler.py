@@ -3,6 +3,7 @@ import csv
 from bs4 import BeautifulSoup
 import pandas as pd
 import sys
+from unidecode import unidecode
 
 # sys.path.append("../../")
 sys.path.append("../")
@@ -16,9 +17,6 @@ class PrimeVideoPageHandler(AmazonPagesHandler):
     def save_metadata(self):
         df = pd.DataFrame(self.parsed)
         df.to_csv(self.save_to, index=False)
-        # with open(self.save_to, "w", newline='') as f:
-        #     writer = csv.writer(f)
-        #     writer.writerows(self.parsed)
     
     def parse_files(self):
         # override the parse_files method
@@ -48,7 +46,7 @@ class PrimeVideoPageHandler(AmazonPagesHandler):
                 
                 # get synopsis
                 try:
-                    item["synopsis"] = soup.find("div", {"class": "dv-dp-node-synopsis"}).text
+                    item["synopsis"] = unidecode(soup.find("div", {"class": "dv-dp-node-synopsis"}).text.strip())
                 except:
                     print("Synopsis not found")
                     item["error"] = 1

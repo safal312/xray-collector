@@ -2,35 +2,42 @@ import json
 import os
 import copy
 import shutil
+import sys
+sys.path.append("../")
 
 import pandas as pd
 
-xrays_dir = "../3_get_xray/xrays/com"
+from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
+
+TARGET_DIR = CLEAN_SCRAPE_DIR
+xrays_dir = f"../3_get_xray/xrays/{TARGET_DIR}"
 playback_file = "PlaybackResources.json"
 xray_file = "Xray.json"
 
 dirs = os.listdir(xrays_dir)
 
-PARSED_DIR = "./parsed_xrays"
+PARSED_DIR = f"./parsed_xrays/{TARGET_DIR}"
+if not os.path.exists("./parsed_xrays"): os.mkdir("./parsed_xrays")
 
 if not os.path.exists(PARSED_DIR):
     os.mkdir(PARSED_DIR)
 
 # store all the metadata for each of the movies.
 items_metadata = []
+
 for dir in dirs:
     if len(os.listdir(os.path.join(xrays_dir, dir))) < 2:
         # shutil.rmtree(os.path.join(xrays_dir, dir))
-        print(dir)
+        print(len(os.listdir(os.path.join(xrays_dir, dir))), dir)
         continue
 
-    print(f"Parsing Xray for {dir}...")
+    # print(f"Parsing Xray for {dir}...")
     pb_filepath = os.path.join(xrays_dir, dir, playback_file)
     xray_filepath = os.path.join(xrays_dir, dir, xray_file)
 
     folder_path = os.path.join(PARSED_DIR, dir)
     if os.path.exists(folder_path):
-        continue
+        # skipping already parsed content
         shutil.rmtree(folder_path)
     os.mkdir(folder_path)
     
