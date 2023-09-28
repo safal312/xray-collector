@@ -6,7 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
 class Scraper:
-    def __init__(self, headless=True):
+    def __init__(self, headless=True, fast_load=False):
         self.options = Options()
 
         if headless:
@@ -19,6 +19,9 @@ class Scraper:
         # "download.directory_upgrade": True,
         # "plugins.always_open_pdf_externally": True #It will not show PDF directly in chrome
         # })
+
+        if fast_load:
+            self.options.page_load_strategy = 'eager'
 
     def get_driver(self):
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.options)

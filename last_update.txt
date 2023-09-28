@@ -1,0 +1,3 @@
+re-ran the parsing
+
+some subtitles were missing i modified the parsing script, will have to run it again.

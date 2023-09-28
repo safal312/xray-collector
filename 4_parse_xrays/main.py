@@ -103,8 +103,13 @@ for dir in dirs:
                 if person["item"]["blueprint"]["id"] == "XrayPersonItem":
                     item["id"] = person["id"]
                     item["person"] = person["item"]["textMap"]["PRIMARY"]
-                    item["character"] = person["item"]["textMap"]["SECONDARY"]
-
+                    item["character"] = ""
+                    # add element even if no character name
+                    try:
+                        item["character"] = person["item"]["textMap"]["SECONDARY"]
+                    except:
+                        pass
+                    
                     all_chars.append(item)
         except:
             print("Error getting all characters information: ", dir)
