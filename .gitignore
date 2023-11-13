@@ -9,3 +9,4 @@ __pycache__
 5_get_subtitles/subtitles
 cleanup_filenames.py
 rename_files.py
+test.py

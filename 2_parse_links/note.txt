@@ -1,0 +1,2 @@
+parse_metadata.py: This will parse the pages gather in the first phase. It will give meta_en_prime.csv under each subfolder in metadata.
+clean_metadata.ipynb: We clean the data by splitting the tags.
