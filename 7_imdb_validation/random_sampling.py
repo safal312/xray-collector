@@ -2,10 +2,12 @@ import pandas as pd
 import random
 
 # Load the CSV file into a DataFrame
-df = pd.read_csv('metadata_for_validation.csv')
+df = pd.read_csv('metadata_for_validation.csv', dtype={"movie_id": str})
 
 # Create a dictionary to store DataFrames for each 'dir' category
 dir_dfs = {}
+
+## REMOVE the rows 
 
 # Iterate over unique 'dir' categories
 for directory in df['dir'].unique():
