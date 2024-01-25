@@ -13,7 +13,6 @@ df_temp = pd.DataFrame()
 
 for DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
     TARGET_DIR = f"../4_parse_xrays/parsed_xrays/{DIR}"
-    # 176 files are xrays without timestampped info, so those are discarded
 
     for item in os.listdir(TARGET_DIR):
         # print(item)
@@ -22,7 +21,7 @@ for DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
         if not os.path.exists(people_path): 
             counter += 1
             continue
-
+        
         try:
             df = pd.read_csv(people_path, encoding='utf-8')
             df['movie'] = item
@@ -30,9 +29,11 @@ for DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
             df_temp = pd.concat([df_temp, df])
         except pandas.errors.EmptyDataError:
             counter += 1
+            print(counter)
 
+# there are 207 missing people.csv files, but only 198 missing people_in_scenes.csv
 print("Missing Xray data: ", counter)
-df_temp.to_csv("all_people_with_duplicates.csv", index=False)
-df_temp = df_temp[~df_temp['name_id'].duplicated()]
-df_temp.to_csv("all_people.csv", index=False)
+# df_temp.to_csv("all_people_with_duplicates.csv", index=False)
+# df_temp = df_temp[~df_temp['name_id'].duplicated()]
+# df_temp.to_csv("all_people.csv", index=False)
     # print(item, len(df))

@@ -7,7 +7,7 @@ VALIDATED_FILE = "validated_metadata.csv"       # this is the file created for e
 
 fh = FileHandler(INIT_FILE, VALIDATED_FILE)
 ui = UserInput(init_file=INIT_FILE, export_file=VALIDATED_FILE)
-
+# exit()
 # Create a new instance of Firefox driver
 driver = FirefoxDriver()
 driver.initiate_two_screens()
@@ -19,8 +19,11 @@ for index, row in fh.get_df().iterrows():
 
     # Open the first link in the first window
     if row['movie_id']:
-        imdb =  'https://www.imdb.com/title/' + 'tt' + str(row['movie_id'])
-        driver.get(imdb)
+        # imdb =  'https://www.imdb.com/title/' + 'tt' + str(row['movie_id'])
+        # https://www.google.com/search?client=firefox-b-d&q=love+spell+imdb+movie+2021
+        movie_query = "+".join(row['title'].split())
+        google_url = f"https://www.google.com/search?q={movie_query}+imdb+movie+{str(row['year'])}"
+        driver.get(google_url)
     else: print("Movie ID not available")
 
     driver.switch_to.window(driver.window_handles[1])

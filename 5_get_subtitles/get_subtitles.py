@@ -11,6 +11,8 @@ TARGETS = [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]
 # check and create subtitles directory
 if not os.path.exists("./subtitles"): os.mkdir("./subtitles")
 
+rows = []
+
 # iterate over each sub-directory
 for TARGET in TARGETS:
     df = pd.read_csv(f"../4_parse_xrays/parsed_xrays/{TARGET}_sub_movies_with_xrays.csv")
@@ -20,19 +22,39 @@ for TARGET in TARGETS:
     if not os.path.exists(f"./subtitles/{TARGET}"): os.mkdir(f"./subtitles/{TARGET}")
 
     for index, row in df.iterrows():
+        temp_r = dict(row.copy())
+        
+        temp_r['subtitle'] = None
         if not pd.isnull(row['sdh_sub_lang']):
             url = row["url"]
+            temp_r['subtitle'] = 'SDH'
         elif not pd.isnull(row['en_url']):
             url = row['en_url']
-        else:
+            temp_r['subtitle'] = 'EN'
+        
+        if temp_r['subtitle'] is None:
+            rows.append(temp_r)
             continue
-
+        
         # check if the file directory exists
         directory = f"./subtitles/{TARGET}/{row['file']}"
         if not os.path.exists(directory): os.mkdir(directory)
+        
+        sub_file_name = f"./subtitles/{TARGET}/{row['file']}/{row['file']}.ttml2"
 
         # the filename of the subtitle
-        sub_file_name = f"./subtitles/{TARGET}/{row['file']}/{row['file']}.ttml2"
+        if temp_r['subtitle'] == 'SDH':
+            if 'en-' not in row['sdh_sub_lang']:
+                sub_file_name = f"./subtitles/{TARGET}/{row['file']}/{row['file']}_en.ttml2"
+                # if os.path.exists(sub_file_name): os.remove(sub_file_name)
+                if not pd.isnull(row['en_url']):
+                    temp_r['subtitle'] = 'SDH_EN'
+                    url = row['en_url']
+                else:
+                    rows.append(temp_r)
+                    continue
+        
+        rows.append(temp_r)
         # if the file exists, don't download and move forward
         if os.path.exists(sub_file_name): continue
         
@@ -40,3 +62,5 @@ for TARGET in TARGETS:
         sub = requests.get(url)
         with open(sub_file_name, "wb") as f:
             f.write(sub.content) 
+
+pd.DataFrame(rows).to_csv("subtitles_collected.csv", index=False)

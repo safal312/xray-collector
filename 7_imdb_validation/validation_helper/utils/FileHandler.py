@@ -15,6 +15,7 @@ class FileHandler:
                 print("Warning: The output file is empty")
     
     def get_df(self):
+        self.df_sub = self.df_sub[self.df_sub['movie_id'].isnull()]
         return self.df_sub
             
     def save_data(self, row):

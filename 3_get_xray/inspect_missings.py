@@ -34,15 +34,18 @@ mpdf = df[df['file'].str.replace(".html", "").isin(movies_paid)]
 mpdf.to_csv(f"missing_data/{TARGET_DIR}/movies_paid.csv", index=False)
 
 # we'll also inspect files for which xray data is present, but the parsing results in having no people in scene information
-# parsed_dir = "./parsed_xrays"
-
 # counter = 0
-# for dir in os.listdir(parsed_dir):
-#     if dir.endswith(".csv"): continue
+# for tdir in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
+#     parsed_dir = f"../4_parse_xrays/parsed_xrays/{tdir}"
 
-#     file = os.path.join(parsed_dir, dir, "people_in_scenes.csv")
-#     with open(file, "r") as f:
-#         lines = len(f.read())
-#         if lines == 1:
-#             counter += 1
-#             print(counter, file, lines)
+#     print("BATCH =========", tdir)
+#     for dir in os.listdir(parsed_dir):
+#         if dir.endswith(".csv"): continue
+
+#         file = os.path.join(parsed_dir, dir, "people_in_scenes.csv")
+#         if not os.path.exists(file): continue
+#         with open(file, "r") as f:
+#             lines = len(f.read())
+#             if lines == 1:
+#                 counter += 1
+#                 print(counter, file, lines)

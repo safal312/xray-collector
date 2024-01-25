@@ -1,2 +1,9 @@
 parse_metadata.py: This will parse the pages gather in the first phase. It will give meta_en_prime.csv under each subfolder in metadata.
 clean_metadata.ipynb: We clean the data by splitting the tags.
+
+Detecting duplicates on the basis of title and short url is flawed because if there are even the slightest variations in title then the movie 
+won't be considered a duplicate.
+There is also a problem with filtering duplicates just by short url. There are some movie pairs where the titles are different and the movies
+are actually different but they have the same short url. Howeve, I believe we should have just filtered for short_url only because movies like 
+Doc West part 1 an 2 have different titles but have the same link.
+Scenarios where movies titles are slightly different but are actually the same is quite abundant.
