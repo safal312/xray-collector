@@ -6,14 +6,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from AmazonPrimeScraper import Scraper, Logger
+from AmazonPrimeScraper import Scraper
 from consts import GET_LINK, ALL_LINKS_DIR, CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
 scr = Scraper(headless=True)
-lgr = Logger("log.txt")
 
 driver = scr.get_driver()
-# Since I didn't login first, the Watch Now buttons didn't appear
 
 def dir_check():
     if not os.path.exists(ALL_LINKS_DIR): os.mkdir(ALL_LINKS_DIR)
@@ -47,6 +45,5 @@ for pagen in range(1, PAGES + 1):
     except:
         msg = "ERROR with page " + str(pagen)
         print(msg)
-        lgr.save_log(msg)
 
 driver.close()

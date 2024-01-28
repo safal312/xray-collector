@@ -69,7 +69,8 @@ for dir in dirs:
                     meta["url"] = sub["url"]
         except:
             print("Error getting subtitles for: ", dir)
-
+        
+        # is this right?
         items_metadata.append(copy.deepcopy(meta))
 
     # this section gets necessary information from xray file
