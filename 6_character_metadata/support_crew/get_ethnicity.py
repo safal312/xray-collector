@@ -20,8 +20,9 @@ from NamePrism import NamePrism
 #         self.outfile = "ethnicity_unique_names_movies_support_crew.csv"
 
 TOKEN="c790922c42f776cb"
-infile = "unique_names_movies_support_crew.csv"
-outfile = "ethnicity_unique_names_movies_support_crew.csv"
+# infile = "unique_names_movies_support_crew.csv"
+infile = "manual_crew/unique_names_movies_support_crew_with_manual.csv"
+outfile = "manual_crew/ethnicity_unique_names_movies_support_crew_with_manual.csv"
 name_id = "person_id"
 names = "name"
 

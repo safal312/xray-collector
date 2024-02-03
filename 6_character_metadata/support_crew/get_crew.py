@@ -9,12 +9,14 @@ from imdb import Cinemagoer
 
 ia = Cinemagoer()
 
-df_in = pd.read_csv("../movies_with_ids.csv", dtype={"movie_id": str})
+# df_in = pd.read_csv("../movies_with_ids.csv", dtype={"movie_id": str})
+df_in = pd.read_csv("../../7_imdb_validation/validation_helper/final_validated_metadata.csv", dtype={"movie_id": str})
 df_in = df_in[~df_in['movie_id'].isna()]
 df_sub = df_in[~df_in['movie_id'].duplicated()]
 # df_sub = df_in
 
-outfile = "movies_support_crew.csv"
+# outfile = "movies_support_crew.csv"
+outfile = "manual_crew/movies_support_crew_with_manual.csv"
 df_out = pd.DataFrame()
 
 if os.path.exists(outfile):
@@ -23,7 +25,6 @@ if os.path.exists(outfile):
         df_sub = df_in[~df_in['movie_id'].isin(df_out['movie_id'])]
     except pandas.errors.EmptyDataError:
         print("Warning: The output file is empty")
-
 # # check duplicates
 # df_check = df_sub[df_sub['movie_id'].isin(df_sub[df_sub['movie_id'].duplicated()]['movie_id'])]
 # df_check.sort_values(by='movie_id')[['file','movie_id']].to_csv("check_duplicate_ids.csv", index=False)
