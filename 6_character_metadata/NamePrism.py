@@ -27,8 +27,8 @@ class NamePrism:
         
         self.df_in = pd.read_csv(self.infile, dtype={self.person_id: str})
         self.df_sub = self.df_in
-
-        if os.path.exists(self.outfile):     
+        
+        if os.path.exists(self.outfile):
             try:
                 df_out = pd.read_csv(self.outfile, dtype={self.person_id: str})
                 self.df_sub = self.df_in[~self.df_in[self.person_id].isin(df_out[self.person_id])]
