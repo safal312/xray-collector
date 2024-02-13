@@ -8,11 +8,15 @@ from unidecode import unidecode
 # sys.path.append("../../")
 sys.path.append("../")
 
-from AmazonPagesHandler import AmazonPagesHandler
+# from AmazonPagesHandler import AmazonPagesHandler
 
-class PrimeVideoPageHandler(AmazonPagesHandler):
+class PrimeVideoPageHandler():
     def __init__(self, path, save_to):
-        super().__init__(path, save_to)
+        self.path = path
+        self.files = [os.path.join(path, p) for p in os.listdir(path)]
+        self.parsed = []
+        self.save_to = save_to
+        # super().__init__(path, save_to)
     
     def save_metadata(self):
         df = pd.DataFrame(self.parsed)

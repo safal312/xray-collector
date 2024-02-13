@@ -4,16 +4,9 @@ import os
 import time
 import pickle
 import sys
-import csv
-import math
-import threading
 import shutil
-import asyncio
-import concurrent.futures
-from multiprocessing import Process
 from threading import Thread
 
-import pandas as pd
 import numpy as np
 sys.path.append('../../')
 
@@ -24,10 +17,10 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.action_chains import ActionChains
 from seleniumwire import webdriver
-from seleniumwire.utils import decode
+# from seleniumwire.utils import decode
 
 from AmazonPrimeScraper import Scraper
-from AmazonPrimeScraper import Logger
+# from AmazonPrimeScraper import Logger
 
 class XrayScraper(Scraper):
     def __init__(self, headless=True, workers=1):
@@ -37,7 +30,7 @@ class XrayScraper(Scraper):
         }
         self.WORKERS = workers
         self.waittime = 60
-        self.logger = Logger("log.txt")
+        # self.logger = Logger("log.txt")
 
     def get_driver(self):
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.options, seleniumwire_options=self.wire_options)
@@ -219,7 +212,8 @@ class XrayScraper(Scraper):
             except:
                 counter += 1
                 if counter >= 3: 
-                    self.logger.save_log([dir_name, "Couldn't get the files"])
+                    # self.logger.save_log([dir_name, "Couldn't get the files"])
+                    print("Couldn't get the files...")
                     break 
                 driver.refresh()
                 print("Error in getting the xray data")
@@ -264,7 +258,7 @@ class XrayScraper(Scraper):
                 print("Content is playable...\n")
             except:
                 print("Play button not found, skip...", dir_name)
-                self.logger.save_log([dir_name, "Play btn not found"])
+                # self.logger.save_log([dir_name, "Play btn not found"])
                 # self.save_missings(dir_name)
                 continue
             

@@ -4,6 +4,13 @@ from bs4 import BeautifulSoup
 
 class AmazonPagesHandler:
     def __init__(self, path, save_to):
+        """
+        Class to handle the parsing of prime video listing from Amazon web pages.
+        
+        Args:
+            path (str): Path to the directory containing the html files.
+            save_to (str): Path to the csv file where the metadata will be saved.
+        """
         self.path = path
         self.files = [os.path.join(path, p) for p in os.listdir(path)]
         self.parsed = []

@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from AmazonPrimeScraper import Scraper
 from consts import GET_LINK, ALL_LINKS_DIR, CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
+# initialize scraper
 scr = Scraper(headless=True)
 
 driver = scr.get_driver()
@@ -20,7 +21,7 @@ def dir_check():
     if not os.path.exists(os.path.join(ALL_LINKS_DIR, IN_2010S)): os.mkdir(os.path.join(ALL_LINKS_DIR, IN_2010S))
     if not os.path.exists(os.path.join(ALL_LINKS_DIR, AFTER_2020)): os.mkdir(os.path.join(ALL_LINKS_DIR, AFTER_2020))
 
-# Change the target dir to set which subset you want to scrape
+# Change the target dir to set which subset (batch) you want to scrape
 TARGET_DIR = AFTER_2020
 
 # GET PAGES NO BY navigating to first page
@@ -30,6 +31,7 @@ PAGES = WebDriverWait(driver, 30).until(
 )[-1]
 PAGES = int(PAGES.get_attribute("innerText"))
 
+# scrape and download each page to all_pages directory
 for pagen in range(1, PAGES + 1):
     try:
         dir_check()

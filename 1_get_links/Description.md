@@ -1,0 +1,2 @@
+**Order of Execution**:
+- `main.py`: This file scrapes all the movie listing html pages from the Amazon US website. The URLs with the decade filters encoded are in the `consts.py` file in the root directory. A utility function `GET_LINK` gives the required URL based on the `TARGET_DIR` chosen in the script itself. The output is stored in `./data/1_all_pages/{batch_name}` in html format.

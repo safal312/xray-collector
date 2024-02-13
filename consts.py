@@ -1,4 +1,14 @@
-ALL_LINKS_DIR="all_pages"
+"""
+We collect the data from Amazon in batches. Each of the following directories contains the data for a specific batch.
+- CLEAN_SCRAPE_DIR: Contains the data for the batch of movies without filtering for a specific decade.
+- BEFORE_2010_DIR: Contains the data for the batch of movies released before 2010.
+- IN_2010S: Contains the data for the batch of movies released in the 2010s.
+- AFTER_2020: Contains the data for the batch of movies released after 2020.
+
+The GET_LINK function allows one to get the URL with the decade specification based on these macros.
+"""
+
+ALL_LINKS_DIR="../data/1_all_pages"
 CLEAN_SCRAPE_DIR="com"
 BEFORE_2010_DIR="before2010"
 IN_2010S="in2010s"

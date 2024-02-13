@@ -25,7 +25,7 @@ df = pd.read_csv(METAFILE, encoding='utf-8')
 df['fname'] = df['file'].str.replace(".html", "")
 
 # get only entries that aren't already downloaded
-# extract_df = get_remaining_xrays(df, TARGET_DIR)
+extract_df = get_remaining_xrays(df, TARGET_DIR, xray_dir="../data/3_xrays")
 
 xscraper.run_workers(df, FOR="xrays", SAVE_DIR=TARGET_DIR)
 # xscraper.run_workers(df, FOR="xrays")
