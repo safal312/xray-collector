@@ -33,7 +33,7 @@ for dir in dirs:
 
     # print(f"Parsing Xray for {dir}...")
     pb_filepath = os.path.join(xrays_dir, dir, playback_file)
-    xray_filepath = os.path.join(xrays_dir, dir, xray_file)
+    xray_filepath = os.path.join(xrays_dir, dir, xray_file) 
 
     folder_path = os.path.join(PARSED_DIR, dir)
     if os.path.exists(folder_path):
