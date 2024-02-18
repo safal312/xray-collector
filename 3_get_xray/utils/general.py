@@ -1,6 +1,6 @@
 import os
 
-def extract_remaining(main_df, TARGET_DIR):
+def extract_remaining(main_df, METADATA_DIR, TARGET_DIR):
     """
     Extracts the remaining entries for downloading the movie's prime video page from the main dataframe.
     The movie home pages are downloaded under their respective batch-directories.
@@ -13,7 +13,7 @@ def extract_remaining(main_df, TARGET_DIR):
     Returns:
         pd.DataFrame: The dataframe containing the remaining files to be downloaded.
     """
-    files = os.listdir(f"./metadata/{TARGET_DIR}")
+    files = os.listdir(f"{METADATA_DIR}/{TARGET_DIR}")
 
     main_df['fname_html'] = main_df['fname'] + ".html"
     df = main_df[~main_df['fname_html'].isin(files)]

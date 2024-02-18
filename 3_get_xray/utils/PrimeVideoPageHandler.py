@@ -1,29 +1,43 @@
 import os
-import csv
 from bs4 import BeautifulSoup
 import pandas as pd
 import sys
 from unidecode import unidecode
 
-# sys.path.append("../../")
 sys.path.append("../")
-
-# from AmazonPagesHandler import AmazonPagesHandler
 
 class PrimeVideoPageHandler():
     def __init__(self, path, save_to):
+        """
+        This class handles parsing the html files of the movie prime video pages.
+        The metadata is then saved to a csv file.
+
+        Args:
+            path (str): The path to the directory containing the html files.
+            save_to (str): The path to save the metadata to.
+        """
         self.path = path
-        self.files = [os.path.join(path, p) for p in os.listdir(path)]
+        try:
+            self.files = [os.path.join(path, p) for p in os.listdir(path)]
+        except:
+            print("Error in getting the files")
+            self.files = []
         self.parsed = []
         self.save_to = save_to
         # super().__init__(path, save_to)
     
     def save_metadata(self):
-        df = pd.DataFrame(self.parsed)
-        df.to_csv(self.save_to, index=False)
+        """
+        Saves the metadata to a csv file.
+        """
+        if self.parsed:
+            df = pd.DataFrame(self.parsed)
+            df.to_csv(self.save_to, index=False)
     
     def parse_files(self):
-        # override the parse_files method
+        """
+        Function to parse the html files and extract the metadata.
+        """
         for index, file in enumerate(self.files):
             print(f"Parsing {index + 1}/{len(self.files)}...")
             with open(file, 'r', encoding='utf-8') as f:
@@ -36,6 +50,7 @@ class PrimeVideoPageHandler():
                         "global_ratings": "",
                         "error": 0}
 
+                # check for badges in the movie main page
                 try:
                     tags_div = soup.find("div", {"class": "dv-node-dp-badges"}).find("div", {"class": "dv-node-dp-badges"})
                     children = tags_div.find_all(recursive=False)
