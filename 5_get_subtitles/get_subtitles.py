@@ -9,22 +9,26 @@ from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 TARGETS = [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]
 
 # check and create subtitles directory
-if not os.path.exists("./subtitles"): os.mkdir("./subtitles")
+SUBTITLES_DIR = "../data/5_subtitles/"
+if not os.path.exists(SUBTITLES_DIR): os.mkdir(SUBTITLES_DIR)
+if not os.path.exists(SUBTITLES_DIR + "/subtitles"): os.mkdir(SUBTITLES_DIR + "/subtitles")
 
 rows = []
 
 # iterate over each sub-directory
 for TARGET in TARGETS:
-    df = pd.read_csv(f"../4_parse_xrays/parsed_xrays/{TARGET}_sub_movies_with_xrays.csv")
-    # sdh = df[~df['sdh_sub_lang'].isnull()]
+    df = pd.read_csv(f"../data/4_parsed_xrays/{TARGET}_sub_movies_with_xrays.csv")
 
     # check and create the sub-directory, like com, in2010s, etc.
-    if not os.path.exists(f"./subtitles/{TARGET}"): os.mkdir(f"./subtitles/{TARGET}")
+    if not os.path.exists(f"{SUBTITLES_DIR}/subtitles/{TARGET}"): os.mkdir(f"{SUBTITLES_DIR}/subtitles/{TARGET}")
 
     for index, row in df.iterrows():
         temp_r = dict(row.copy())
         
         temp_r['subtitle'] = None
+        # first we check if SDH-type subtitle is present, we download it if available
+        # else we try to get the subtitle in English 
+        # note: there were cases where we got SDH in a non-English language. In such cases, the SDH and the english subtitle are both downloaded 
         if not pd.isnull(row['sdh_sub_lang']):
             url = row["url"]
             temp_r['subtitle'] = 'SDH'
@@ -36,17 +40,27 @@ for TARGET in TARGETS:
             rows.append(temp_r)
             continue
         
-        # check if the file directory exists
-        directory = f"./subtitles/{TARGET}/{row['file']}"
+        # check if the movie directory exists
+        directory = f"{SUBTITLES_DIR}/subtitles/{TARGET}/{row['file']}"
         if not os.path.exists(directory): os.mkdir(directory)
         
-        sub_file_name = f"./subtitles/{TARGET}/{row['file']}/{row['file']}.ttml2"
+        sub_file_name = f"{SUBTITLES_DIR}/subtitles/{TARGET}/{row['file']}/{row['file']}.ttml2"
 
-        # the filename of the subtitle
+        print(index, f"Downloading {row['file']}...")
+        
+        # the subtitle is SDH, we first download it then we check if it is in english or not
+        # if SDH not in english, we download the english version as well
         if temp_r['subtitle'] == 'SDH':
+            # download the SDH file
+            sub = requests.get(url)
+            with open(sub_file_name, "wb") as f:
+                f.write(sub.content)
+
+            # if the SDH subtitle language is not english, try looking for an english subtitle
             if 'en-' not in row['sdh_sub_lang']:
-                sub_file_name = f"./subtitles/{TARGET}/{row['file']}/{row['file']}_en.ttml2"
-                # if os.path.exists(sub_file_name): os.remove(sub_file_name)
+                sub_file_name = f"{SUBTITLES_DIR}/subtitles/{TARGET}/{row['file']}/{row['file']}_en.ttml2"
+                
+                # if the english URL exists
                 if not pd.isnull(row['en_url']):
                     temp_r['subtitle'] = 'SDH_EN'
                     url = row['en_url']
@@ -58,9 +72,11 @@ for TARGET in TARGETS:
         # if the file exists, don't download and move forward
         if os.path.exists(sub_file_name): continue
         
-        print(index, f"Downloading {row['file']}...")
-        sub = requests.get(url)
-        with open(sub_file_name, "wb") as f:
-            f.write(sub.content) 
+        
+        # download the english subtitle if it's the only one present or if SDH is not in English
+        if temp_r['subtitle'] == 'SDH_EN' or temp_r['subtitle'] == 'EN':
+            sub = requests.get(url)
+            with open(sub_file_name, "wb") as f:
+                f.write(sub.content) 
 
-pd.DataFrame(rows).to_csv("subtitles_collected.csv", index=False)
+pd.DataFrame(rows).to_csv(f"{SUBTITLES_DIR}/subtitles_collected.csv", index=False)
