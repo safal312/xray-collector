@@ -25,6 +25,8 @@
             - `sdh_sub_lang` - language of the subtitle that is of SDH type
             - `url` - link to the subtitle of SDH type.
 
+- `inspect_empty_xray_data.py`: This is a utility script that calculates how many movies have missing `people.csv` files or `people_in_scenes.csv` files. This helps you to strategize how to remove the movies without valid xrays.
+
 - `remove_empty_xrays.py`:
     - `Inputs`:
         - `../data/4_parsed_xrays/{target_dir}/`: We check if the `people_in_scenes.csv` file is present in each movie directory and is non-empty. Then, we only keep such entries from the `movies_with_xrays.csv` file.

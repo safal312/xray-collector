@@ -22,6 +22,7 @@ class AmazonPagesHandler:
             writer.writerows(self.parsed)
     
     def parse_files(self):
+        counter = 0
         for index, file in enumerate(self.files):
             print(f"Parsing {index + 1}/{len(self.files)}...")
             with open(file, 'r', encoding='utf-8') as f:
@@ -31,6 +32,9 @@ class AmazonPagesHandler:
                     movie_title = movie.find("h2").find("a")
                     title = movie_title.text.strip()
                     link = movie_title["href"]
+
+                    print(title, counter)
+                    counter += 1
 
                     tags = []
                     spans = movie.find("div", {"class": "a-size-base"}).find_all('span')

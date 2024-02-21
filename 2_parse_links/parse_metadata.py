@@ -6,7 +6,7 @@ from AmazonPagesHandler import AmazonPagesHandler
 from consts import ALL_LINKS_DIR, CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S,AFTER_2020
 
 METADATA_DIR = "../data/2_metadata"
-for TARGET_DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
+for TARGET_DIR in [BEFORE_2010_DIR]:
 
     if not os.path.exists(METADATA_DIR): os.mkdir(METADATA_DIR)
     if not os.path.exists(f"{METADATA_DIR}/{TARGET_DIR}"): os.mkdir(f"{METADATA_DIR}/{TARGET_DIR}")
