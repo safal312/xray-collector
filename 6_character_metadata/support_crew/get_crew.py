@@ -9,25 +9,23 @@ from imdb import Cinemagoer
 
 ia = Cinemagoer()
 
-# df_in = pd.read_csv("../movies_with_ids.csv", dtype={"movie_id": str})
-df_in = pd.read_csv("../../7_imdb_validation/validation_helper/final_validated_metadata.csv", dtype={"movie_id": str})
+# import the final metadata file
+METADATA_DIR = "../../data/6_character_metadata"
+df_in = pd.read_csv(f"{METADATA_DIR}/final_validated_metadata.csv", dtype={"movie_id": str})
 df_in = df_in[~df_in['movie_id'].isna()]
 df_sub = df_in[~df_in['movie_id'].duplicated()]
 # df_sub = df_in
 
-# outfile = "movies_support_crew.csv"
-outfile = "manual_crew/movies_support_crew_with_manual.csv"
+outfile = f"{METADATA_DIR}/movies_support_crew_with_manual.csv"
 df_out = pd.DataFrame()
 
+# get last checkpoint
 if os.path.exists(outfile):
     try:
         df_out = pd.read_csv(outfile, dtype={"movie_id": str})
         df_sub = df_in[~df_in['movie_id'].isin(df_out['movie_id'])]
     except pandas.errors.EmptyDataError:
         print("Warning: The output file is empty")
-# # check duplicates
-# df_check = df_sub[df_sub['movie_id'].isin(df_sub[df_sub['movie_id'].duplicated()]['movie_id'])]
-# df_check.sort_values(by='movie_id')[['file','movie_id']].to_csv("check_duplicate_ids.csv", index=False)
 
 def handler(df_sub, lock):
     counter = 0
@@ -36,9 +34,9 @@ def handler(df_sub, lock):
     data = []
     for index, row in df_sub.iterrows():
         print("Index:", index, "Movie:", row['title'])
-        # nr = dict(row)
         movie_id = row['movie_id']
 
+        # get all credits from imdb
         all_people = ia.get_movie_full_credits(movie_id)['data']
         
         if type(all_people) != type(None):
@@ -46,7 +44,7 @@ def handler(df_sub, lock):
 
                 people  = all_people[dep]
                 for p in people:
-                    # add movie name/title also later
+                    # save data of everyone along with their role
                     nr = {'movie_id': movie_id, 'file': row['file'], 'role': None,'person_id': None, 'name': None, 'long_canonical_name': None, 'headshot': None}
                     nr['role'] = dep
                     
@@ -65,9 +63,7 @@ def handler(df_sub, lock):
                             nr['person_id'] = p.personID
                     else: continue
         
-                    # print(nr)
                     data.append(nr)
-        # exit()
 
         counter += 1
 
@@ -82,6 +78,7 @@ def handler(df_sub, lock):
         with lock:
             df.to_csv(outfile, mode='a', header=not os.path.exists(outfile), index=False)
 
+# scrape concurrently with 3 workers by default
 def scrape_concurrent(main_df, WORKERS=3):
     lock = Lock()
 

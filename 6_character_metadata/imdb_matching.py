@@ -50,6 +50,7 @@ def handler(df_sub, lock):
             cast_data = ia.get_movie_full_credits(s.movieID)['data']
             # check if the movie has cast data at all
             if 'cast' in cast_data:
+                # only get the top 5 cast
                 cast = cast_data['cast'][:5]
             else:
                 continue

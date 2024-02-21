@@ -6,10 +6,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 # driver class extending webdriver element
 class FirefoxDriver(webdriver.Firefox):
     def __init__(self):
+        """
+        Helper class to start two windows of Firefox browser.
+        """
         super().__init__()
 
         self.def_addr = "https://example.com"
-        self.toggle = 0
     
     def initiate_two_screens(self):
         self.get(self.def_addr)

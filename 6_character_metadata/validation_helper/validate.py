@@ -2,12 +2,14 @@ from utils.FirefoxDriver import FirefoxDriver
 from utils.FileHandler import FileHandler
 from utils.UserInput import UserInput
 
-INIT_FILE = "../after2020_sampled.csv"        # this is the file we start with for validation
-VALIDATED_FILE = "validated_after2020.csv"       # this is the file created for each line validated. Then, the line is copied to this file
+METADATA_DIR = "../../data/6_character_metadata"
+INIT_FILE = f"{METADATA_DIR}/metadata_for_validation.csv"        # this is the file we start with for validation
+# INIT_FILE = f"../after2020_sampled.csv"        
+VALIDATED_FILE = f"{METADATA_DIR}/validated_metadata.csv"       # this is the file created for each line validated. Then, the line is copied to this file
 
 fh = FileHandler(INIT_FILE, VALIDATED_FILE)
-ui = UserInput(init_file=INIT_FILE, export_file=VALIDATED_FILE)
-# exit()
+ui = UserInput(export_file=VALIDATED_FILE)
+
 # Create a new instance of Firefox driver
 driver = FirefoxDriver()
 driver.initiate_two_screens()
