@@ -18,6 +18,12 @@
 
 - `support_crew/get_crew.py`: Uses Cinemagoer library to extract data of all the support crew for the movies in our dataset.
 
+- `validate_metadata_xray/check_xray_sanity.ipynb`: Check for cases where x-ray file is duplicated for different movies. Manually inspect such issues and remove the actual duplicates.
+
+- `validate_metadata_xray/check_title_mismatched.ipynb`: Check cases where the metadata file (Playback Resources) might have been duplicated.
+
+- `validate_metadata_xray/fix_metadata_mismatch.ipynb`: We fix the cases where the Playback Resources are duplicates/mismatches and refill proper metadata using the imdb ID which is correct.
+
 **Files**
 - `extract_names.py`:
     - `Inputs`:
@@ -77,5 +83,26 @@
             - `role`: Role of person in our movie
             - `person_id`: Name ID of person in IMDb
             - `name`: Name of person in IMDb
-            `long_canonical_name`: Name in canonical format
+            - `long_canonical_name`: Name in canonical format
             - `headshot`: Link to headshot of person
+
+- `validate_metadata_xray/check_xray_sanity.ipynb`:
+    - `Inputs`:
+        - `../../data/6_character_metadata/final_validated_metadata.csv`: This is the metadata fill with the missing imdb ids filled in.
+        - `../../data/6_character_metadata/all_people_with_duplicates.csv`: We inspect the cast extracted from x-ray data for different movies from this file. We check for duplicates based on cast information.
+        - `../../data/6_character_metadata/metadata_for_validation.csv`: This file is generated after doing the imdb matching. Among the entries, the ones that weren't matched could likely be because the cast information from x-ray didn't match the corresponding imdb entry because it was incorrect. We can use this file to identify such cases and remove them.
+    - `Outputs`:
+        - `../../data/6_character_metadata/filtered_final_validated_metadata.csv`: This file is the generated after removing the potential duplicates. We encountered some entries that were comedy stand-ups which showed up because it usually has one person as the cast and they have multiple shows on the platform. We remove such cases as well to have a clean file with all movies.
+
+- `validate_metadata_xray/check_title_mismatched.ipynb`:
+    - `Inputs`:
+        - `../../data/6_character_metadata/final_validated_metadata.csv`: This file can be used to detect the duplicates, but you can also use it with `filtered_final_validated_metadata.csv` in other runs.
+    - `Outputs`:
+        - `./check_title_mismatch.csv`: This file is created by identifying potential duplicates based on the discrepancy in the title of the movie and the unique file identifier. The approach is described in the notebook. We manually check if the movies are actually duplicates and create a copy of this file manually with a subset of the entries and save it as `./manually_checked_title_mismatch.csv`.
+
+- `validate_metadata_xray/fix_metadata_mismatch.ipynb`:
+    - `Inputs`:
+        - `./manually_checked_title_mismatch.csv`: This is the manually created file with actual metadata mismatches.
+        - `../../data/6_character_metadata/filtered_final_validated_metadata.csv`: This is the metadata file filtered after removing entries with duplicate x-rays. This file also has imdb ID which can be used to extract the real title and synopsis from IMDb.
+    - `Outputs`:
+        - `../../data/6_character_metadata/all_metadata_finalized.csv`: This is the final metadata file which is generated with correct metadata.

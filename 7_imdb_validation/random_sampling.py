@@ -1,8 +1,9 @@
 import pandas as pd
 import random
 
+METADATA_DIR = "../data/6_character_metadata"
 # Load the CSV file into a DataFrame
-df = pd.read_csv('metadata_for_validation.csv', dtype={"movie_id": str})
+df = pd.read_csv(f'{METADATA_DIR}/metadata_for_validation.csv', dtype={"movie_id": str})
 
 # Create a dictionary to store DataFrames for each 'dir' category
 dir_dfs = {}
