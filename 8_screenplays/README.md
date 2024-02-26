@@ -21,3 +21,14 @@ We used this repository to collect screenplays from various sources at once and 
             - `M` = Metadata
 
 - `../data/8_screenplays/clean_validated.csv`: The tool tries to find the appropriate IMDb id for each screenplay, but it's not very accurate. Thus, we manually validate all the ids. The finalized ids are under the column `id_merged`.
+
+**Citing**
+If you use this repository, please cite:
+
+@misc{Xray_scraper_Safal,
+    author = {Shrestha, Safal},
+    month = {2},
+    title = {{Xray Scraper}},
+    url = {https://github.com/safal312/xray-scraper},
+    year = {2024}
+}
