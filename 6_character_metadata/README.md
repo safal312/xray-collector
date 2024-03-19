@@ -14,7 +14,7 @@
     - `FirefoxDriver.py`: Helper class to start two windows for validation.
     - `UserInput.py`: Helper class to handle the QA to collect details about the validation process. Asks questions in the terminal.
 
-- `merge_validated.ipynb`: Fills `metadata_for_validation.csv` file with the validated imdb IDs that were initially missing.
+- `validation_helper/merge_validated.ipynb`: Fills `metadata_for_validation.csv` file with the validated imdb IDs that were initially missing.
 
 - `support_crew/get_crew.py`: Uses Cinemagoer library to extract data of all the support crew for the movies in our dataset.
 
