@@ -192,8 +192,8 @@ class XrayScraper(Scraper):
         self.sign_in("https://www.amazon.com/gp/sign-in.html", driver)
         
         for index, row in df.iterrows():
-            link = "https://www.amazon.com" + row['link']
-            title = row['fname']
+            link = "https://www.amazon.com" + row[self.link_in_file]
+            title = row[self.fname_in_file]
 
             try:
                 driver.get(link)
@@ -331,13 +331,13 @@ class XrayScraper(Scraper):
 
         for index, row in df.iterrows():
 
-            link = "https://www.amazon.com" + row['link']
-            title = row['fname']
+            link = "https://www.amazon.com" + row[self.link_in_file]
+            title = row[self.fname_in_file]
             driver.get(link)
 
             self.check_captcha(driver)
 
-            dir_name = f"{PARENT_DIR}/{SAVE_DIR}/" + row['fname']
+            dir_name = f"{PARENT_DIR}/{SAVE_DIR}/" + row[self.fname_in_file]
             if not os.path.exists(f"{PARENT_DIR}/{SAVE_DIR}/"): os.mkdir(f"{PARENT_DIR}/{SAVE_DIR}/")
             
             try:

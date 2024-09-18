@@ -21,7 +21,7 @@ METAFILE = f"{METADATA_DIR}/{TARGET_DIR}/meta_en_prime.csv"
 # METAFILE = f"./missing_data/{TARGET_DIR}/movies_paid.csv"
 
 df = pd.read_csv(METAFILE, encoding='utf-8')
-df['fname'] = df['file'].str.replace(".html", "")
+df['file'] = df['file'].str.replace(".html", "")
 
 # get only entries that aren't already downloaded
 PARENT_SAVE_DIR = f"../data/3_xrays"

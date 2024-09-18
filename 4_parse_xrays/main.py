@@ -11,7 +11,7 @@ from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
 # iterate over each sub-directory
 for TARGET_DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
-    xrays_dir = f"../data/3_get_xray/xrays/{TARGET_DIR}"
+    xrays_dir = f"../data/3_xrays/{TARGET_DIR}"
     playback_file = "PlaybackResources.json"
     xray_file = "Xray.json"
 
@@ -83,7 +83,7 @@ for TARGET_DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
                 scene_list = xray["page"]["sections"]["center"]["widgets"]["widgetList"][0]["widgets"]["widgetList"][0]["widgets"]["widgetList"][0]["partitionedChangeList"]
                 for scene in scene_list:
                     item = {}
-                    item["scene"] = scene["initialItemIds"][0]
+                    item["scene"] = scene["initialItemIds"][0].split("/")[3]
                     item["start"] = scene["timeRange"]["startTime"]
                     item["end"] = scene["timeRange"]["endTime"]
 
@@ -102,7 +102,9 @@ for TARGET_DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
                 for person in people:
                     item = {}
                     if person["item"]["blueprint"]["id"] == "XrayPersonItem":
-                        item["id"] = person["id"]
+                        if not person["id"].startswith("/name"): continue
+                        
+                        item["name_id"] = person["id"].split("/")[2]
                         item["person"] = person["item"]["textMap"]["PRIMARY"]
                         item["character"] = ""
                         # add element even if no character name
@@ -127,7 +129,7 @@ for TARGET_DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
                     # the number of scenes seem to match the partitionedchangeList
                     # so we can assume that it has a one to one mapping
                     # the start and end times are also there to verify
-                    item["scene"] = "/xray/scene/" + str(index + 1)
+                    item["scene"] = str(index + 1)
                     item["start"] = scene["timeRange"]["startTime"]
                     item["end"] = scene["timeRange"]["endTime"]
 
@@ -139,7 +141,7 @@ for TARGET_DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
                         continue
 
                     for person in scene["changesCollection"]:
-                        item["person_id"] = person["itemId"]
+                        item["name_id"] = None if not person["itemId"].startswith("/name") else person["itemId"].split("/")[2]
                         item["timestamp"] = person["timePosition"]
                         
                         chars_in_scenes.append(copy.deepcopy(item))  
