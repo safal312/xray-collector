@@ -9,8 +9,8 @@ data/*
 3_get_xray/xrays
 4_parse_xrays/parsed_xrays
 5_get_subtitles/subtitles
+6_character_metadata/all_crew_with_gender_ethnicity.csv
 6_character_metadata/gender
-# 6_character_metadata/all_crew_with_gender_ethnicity.csv
 # 6_character_metadata/gender/all_people_with_manual_gender_merged.csv
 # 6_character_metadata/gender/all_unique_crew_for_inference.csv
 # 6_character_metadata/gender/crew_genderize_data.csv
