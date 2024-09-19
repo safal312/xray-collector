@@ -30,9 +30,9 @@ data/*
 6_character_metadata/support_crew/unique_*
 6_character_metadata/get_ethnicity.py
 6_character_metadata/support_crew/get_ethnicity.py
+7_imdb_validation/random_sampling.py
 8_screenplays/parsed_screenplays
 8_screenplays/raw_screenplays
-/coverage
 cleanup_filenames.py
 rename_files.py
 test.py
@@ -42,13 +42,13 @@ geckodriver.log
 note.txt
 note.csv
 
-random_sampling.py
 imdb_matching copy.py
 matching_check.ipynb
 all.csv
 all_only_algo - Copy.csv
 genre_check.ipynb
 tmdb_data.json
+script\ types.txt
 
 dialogues
 check.ipynb
