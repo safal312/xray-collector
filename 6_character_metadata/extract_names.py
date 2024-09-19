@@ -29,7 +29,6 @@ for DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
         try:
             df = pd.read_csv(people_path, encoding='utf-8')
             df['movie'] = item
-            df['name_id'] = df['id'].str.extract(r'(nm[0-9]+)', expand=False)
             df_temp = pd.concat([df_temp, df])
         except pandas.errors.EmptyDataError:
             print("empty data error")
