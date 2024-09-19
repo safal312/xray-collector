@@ -20,7 +20,7 @@ for index, row in fh.get_df().iterrows():
     driver.switch_to.window(driver.window_handles[0])
 
     # Open the first link in the first window
-    if row['movie_id']:
+    if row['imdb_id']:
         # imdb =  'https://www.imdb.com/title/' + 'tt' + str(row['movie_id'])
         # https://www.google.com/search?client=firefox-b-d&q=love+spell+imdb+movie+2021
         movie_query = "+".join(row['title'].split())

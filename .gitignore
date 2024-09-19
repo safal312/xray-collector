@@ -10,19 +10,25 @@ data/*
 4_parse_xrays/parsed_xrays
 5_get_subtitles/subtitles
 6_character_metadata/all_crew_with_gender_ethnicity.csv
+6_character_metadata/all_people_ethnicity.csv
 6_character_metadata/gender
 # 6_character_metadata/gender/all_people_with_manual_gender_merged.csv
 # 6_character_metadata/gender/all_unique_crew_for_inference.csv
 # 6_character_metadata/gender/crew_genderize_data.csv
 # 6_character_metadata/gender/crew_genderize_data.json
 # 6_character_metadata/gender/parsed_names_all_unique_crew_for_inference.csv
-6_character_metadata/support_crew/manual_crew/all_support_crew_with_ethnicity.csv
-6_character_metadata/support_crew/manual_crew/all_support_crew_with_unique_names.csv
+6_character_metadata/support_crew/manual_crew
+# 6_character_metadata/support_crew/manual_crew/all_support_crew_with_ethnicity.csv
+# 6_character_metadata/support_crew/manual_crew/all_support_crew_with_unique_names.csv
 6_character_metadata/support_crew/movies_support_crew.csv
 6_character_metadata/support_crew/ethnicity_unique_names_movies_support_crew.csv
-6_character_metadata/support_crew/manual_crew/unique_movies_support_crew*
-6_character_metadata/support_crew/manual_crew/movies_support_crew*
-6_character_metadata/support_crew/manual_crew/ethnicity_unique_names*
+# 6_character_metadata/support_crew/manual_crew/unique_movies_support_crew*
+# 6_character_metadata/support_crew/manual_crew/movies_support_crew*
+6_character_metadata/NamePrism.py
+6_character_metadata/support_crew/check_crew.ipynb
+6_character_metadata/support_crew/unique_*
+6_character_metadata/get_ethnicity.py
+6_character_metadata/support_crew/get_ethnicity.py
 8_screenplays/parsed_screenplays
 8_screenplays/raw_screenplays
 /coverage
@@ -31,6 +37,9 @@ rename_files.py
 test.py
 test.csv
 geckodriver.log
+
+note.txt
+note.csv
 
 random_sampling.py
 imdb_matching copy.py

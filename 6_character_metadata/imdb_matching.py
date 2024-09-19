@@ -39,10 +39,10 @@ def handler(df_sub, lock):
         search_results = ia.search_movie(row['title'])
 
         # get all the people of the movie from our x-ray data
-        movie_cast = all_people[all_people["movie"] == row['file']]['name_id'].values
+        movie_cast = all_people[all_people["file"] == row['file']]['name_id'].values
 
         nr = dict(row)
-        nr['movie_id'] = None
+        nr['imdb_id'] = None
         nr['match_error'] = None        # how many cast were matched
         
         # iterate over each search result
@@ -68,7 +68,7 @@ def handler(df_sub, lock):
             # calculate proportion of imdb cast that is in our x-ray data, if there's at least 1 match we save the result
             # we perform manual validation later to check how good the matching is
             if (len(cast_ids) - errors) / len(cast_ids) > 0:
-                nr['movie_id'] = s.movieID
+                nr['imdb_id'] = s.movieID
                 nr['match_error'] = errors
                 print("Found match:", s.movieID)
                 break
@@ -90,7 +90,7 @@ def handler(df_sub, lock):
             df.to_csv(outfile, mode='a', header=not os.path.exists(outfile), index=False)
 
 # start matching in parallel with 3 workers
-def scrape_concurrent(main_df, WORKERS=3):
+def scrape_concurrent(main_df, WORKERS=1):
     lock = Lock()
 
     files = np.array_split(main_df, WORKERS)

@@ -12,7 +12,7 @@ class FileHandler:
             INIT_FILE (str): Path to the file containing the initial data.
             OUTFILE (str): Path to the file where the validated data will be saved.
         """
-        self.df_in = pd.read_csv(INIT_FILE, dtype={"movie_id": str})
+        self.df_in = pd.read_csv(INIT_FILE, dtype={"imdb_id": str})
         self.outfile = OUTFILE
         self.df_sub = self.df_in
         if os.path.exists(OUTFILE):
@@ -26,7 +26,7 @@ class FileHandler:
         """
         Returns the movies with missing imdb IDs to be validated.
         """
-        self.df_sub = self.df_sub[self.df_sub['movie_id'].isnull()]
+        self.df_sub = self.df_sub[self.df_sub['imdb_id'].isnull()]
         return self.df_sub
             
     def save_data(self, row):

@@ -47,7 +47,7 @@
     
     - `Outputs`:
         - `../data/6_character_metadata/movies_with_ids.csv`: Output file is same as `movies_with_cast_manual.csv` with couple of new columns:
-            - `movie_id`: Movie ID matched by algorithm.
+            - `imdb_id`: Movie ID matched by algorithm.
             - `match_error`: No. of unmatched people between the movie's cast list and our xray data. 
             - `cast_num`: Total IMDb cast for movie matched (Max 5 because of top 5 cast limit).
 
@@ -77,18 +77,19 @@
 - `support_crew/get_crew.py`:
     - `Inputs`:
         - `../../data/6_character_metadata/final_validated_metadata.csv`: Metadata of all movies in our dataset.
+    - `Outputs`:
         - `../../data/6_character_metadata/movies_support_crew_with_manual.csv`: File with data of all support crew. It has the following columns:
-            - `movie_id`: IMDb id of movie
+            - `imdb_id`: IMDb id of movie
             - `file`: File identifier of movie in our dataset
             - `role`: Role of person in our movie
-            - `person_id`: Name ID of person in IMDb
+            - `name_id`: Name ID of person in IMDb
             - `name`: Name of person in IMDb
             - `long_canonical_name`: Name in canonical format
             - `headshot`: Link to headshot of person
 
 - `validate_metadata_xray/check_xray_sanity.ipynb`:
     - `Inputs`:
-        - `../../data/6_character_metadata/final_validated_metadata.csv`: This is the metadata fill with the missing imdb ids filled in.
+        - `../../data/6_character_metadata/final_validated_metadata.csv`: This is the metadata file with the missing imdb ids filled in.
         - `../../data/6_character_metadata/all_people_with_duplicates.csv`: We inspect the cast extracted from x-ray data for different movies from this file. We check for duplicates based on cast information.
         - `../../data/6_character_metadata/metadata_for_validation.csv`: This file is generated after doing the imdb matching. Among the entries, the ones that weren't matched could likely be because the cast information from x-ray didn't match the corresponding imdb entry because it was incorrect. We can use this file to identify such cases and remove them.
     - `Outputs`:

@@ -11,9 +11,9 @@ ia = Cinemagoer()
 
 # import the final metadata file
 METADATA_DIR = "../../data/6_character_metadata"
-df_in = pd.read_csv(f"{METADATA_DIR}/final_validated_metadata.csv", dtype={"movie_id": str})
-df_in = df_in[~df_in['movie_id'].isna()]
-df_sub = df_in[~df_in['movie_id'].duplicated()]
+df_in = pd.read_csv(f"{METADATA_DIR}/final_validated_metadata.csv", dtype={"imdb_id": str})
+df_in = df_in[~df_in['imdb_id'].isna()]
+df_sub = df_in[~df_in['imdb_id'].duplicated()]
 # df_sub = df_in
 
 outfile = f"{METADATA_DIR}/movies_support_crew_with_manual.csv"
@@ -22,8 +22,8 @@ df_out = pd.DataFrame()
 # get last checkpoint
 if os.path.exists(outfile):
     try:
-        df_out = pd.read_csv(outfile, dtype={"movie_id": str})
-        df_sub = df_in[~df_in['movie_id'].isin(df_out['movie_id'])]
+        df_out = pd.read_csv(outfile, dtype={"imdb_id": str})
+        df_sub = df_in[~df_in['imdb_id'].isin(df_out['imdb_id'])]
     except pandas.errors.EmptyDataError:
         print("Warning: The output file is empty")
 
@@ -34,7 +34,7 @@ def handler(df_sub, lock):
     data = []
     for index, row in df_sub.iterrows():
         print("Index:", index, "Movie:", row['title'])
-        movie_id = row['movie_id']
+        movie_id = row['imdb_id']
 
         # get all credits from imdb
         all_people = ia.get_movie_full_credits(movie_id)['data']
@@ -45,11 +45,11 @@ def handler(df_sub, lock):
                 people  = all_people[dep]
                 for p in people:
                     # save data of everyone along with their role
-                    nr = {'movie_id': movie_id, 'file': row['file'], 'role': None,'person_id': None, 'name': None, 'long_canonical_name': None, 'headshot': None}
+                    nr = {'imdb_id': movie_id, 'file': row['file'], 'role': None,'name_id': None, 'person': None, 'long_canonical_name': None, 'headshot': None}
                     nr['role'] = dep
                     
                     if p.get('name'):
-                        nr['name'] = p['name']
+                        nr['person'] = p['name']
                     else: continue
                     
                     if p.get('long imdb canonical name'):
@@ -60,7 +60,7 @@ def handler(df_sub, lock):
                     
                     if hasattr(p, 'personID'):
                         if p.personID:
-                            nr['person_id'] = p.personID
+                            nr['name_id'] = "nm" + str(p.personID)
                     else: continue
         
                     data.append(nr)
