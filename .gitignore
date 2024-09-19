@@ -20,6 +20,7 @@ data/*
 6_character_metadata/support_crew/manual_crew
 # 6_character_metadata/support_crew/manual_crew/all_support_crew_with_ethnicity.csv
 # 6_character_metadata/support_crew/manual_crew/all_support_crew_with_unique_names.csv
+6_character_metadata/merge_all_gender_and_ethnicity.ipynb
 6_character_metadata/support_crew/movies_support_crew.csv
 6_character_metadata/support_crew/ethnicity_unique_names_movies_support_crew.csv
 # 6_character_metadata/support_crew/manual_crew/unique_movies_support_crew*
