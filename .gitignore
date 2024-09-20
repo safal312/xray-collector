@@ -33,7 +33,7 @@ data/*
 7_imdb_validation/random_sampling.py
 8_screenplays/parsed_screenplays
 8_screenplays/raw_screenplays
-8_screenplays/inspect_low_matches.ipynb
+8_screenplays/3_character_matching/inspect_low_matches.ipynb
 cleanup_filenames.py
 rename_files.py
 test.py
