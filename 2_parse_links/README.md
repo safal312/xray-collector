@@ -17,7 +17,7 @@ The following scripts need to run in the mentioned order. Detailed descriptions 
     - Inputs:
         - `../data/2_metadata/{target_dir}/meta_en_prime.csv`: Output files of above script
     - Outputs:
-        - `../data/2_metadata/{target_dir}/clean_meta_en_prime.csv`: Output file after first de-duplication. Includes: `title,link,tags,year,clean_title,fname,short_url,clean_short_url`
+        - `../data/2_metadata/{target_dir}/clean_meta_en_prime.csv`: Output file after first de-duplication. Includes: `title,link,tags,year,clean_title,file,short_url,clean_short_url`
 
 - `check_duplicated_run.ipynb`:
     - Inputs:

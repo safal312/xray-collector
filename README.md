@@ -22,8 +22,10 @@ The following are the different modules in our xray scraper pipeline. Each of th
 The data is available under `/data`. Each directory is numbered with the module number it belongs to. For example, `1_get_links` produces the html pages of movie listings and saves it under `1_all_pages`. Suggestions on accessing the crucial data files are mentioned in the `data/README.md` file.
 
 **Citing**
+
 If you use this repository, please cite:
 
+```
 @misc{Xray_scraper_Safal,
     author = {Shrestha, Safal},
     month = {2},
@@ -31,3 +33,4 @@ If you use this repository, please cite:
     url = {https://github.com/safal312/xray-scraper},
     year = {2024}
 }
+```

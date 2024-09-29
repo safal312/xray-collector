@@ -95,8 +95,12 @@ We used this repository to collect screenplays from various sources at once and 
         - `../../data/8_screenplays/3_character_matching/all_chars_matched_imdb.csv`: Metadata of all movies with match stats added as new columns.
         
         - `../../data/8_screenplays/3_character_matching/movies_with_high_coverage_and_matching/`: We remove entries with low scores on our metric (movies with low `high_matches` and low `coverage`).
-            - `imdb_and_stats.csv`: Filtered `match_stats.csv` file with high matching.
-            - `matches_with_stats.csv`: Filtered metadata of movies with stats.
+            - `/high_matches_meta.csv`: This is the metadata file of high-matched screenplays.
+            - `/imdb_and_stats.csv`: This file has various statistics on the screenplay:
+                - `high_matches`: (number of cast with match score > 80) / total_cast
+                - `avg_score`: average matching score of all cast in a movie
+                - `coverage`: total utterances of all remaining characters (some characters were removed if they had no utterance or were erroneous characters) / total utterances calculated for all characters. (We need this metric to check how much information we discarded from a movie)
+            - `/match_with_stats.csv`: This file has stats on the matching of characters for each movie. There are three measures that we use. The fuzzy matching score between imdb character and script character is provided as `score`.
 
 - `merge_xray_sc.ipynb`:
     - `Inputs`:

@@ -4,6 +4,7 @@ __pycache__
 *.pkl
 *.zip
 data/*
+/coverage
 1_get_links/all_pages/
 3_get_xray/metadata
 3_get_xray/xrays
@@ -49,6 +50,7 @@ all.csv
 all_only_algo - Copy.csv
 genre_check.ipynb
 tmdb_data.json
+tmdb_detailed_data.json
 script\ types.txt
 
 dialogues
