@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append("../")
 
-from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
+from consts import CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
 import pandas as pd
 import pandas.io.common
@@ -13,7 +13,7 @@ df_temp = pd.DataFrame()
 SAVE_DIR = "../data/6_character_metadata"
 if not os.path.exists(SAVE_DIR): os.mkdir(SAVE_DIR) 
 
-for DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
+for DIR in [CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
     TARGET_DIR = f"../data/4_parsed_xrays/"
     df_meta = pd.read_csv(f"{TARGET_DIR}/{DIR}_sub_movies_with_xrays.csv")
 

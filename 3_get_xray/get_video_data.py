@@ -6,14 +6,14 @@ sys.path.append('../')
 import pandas as pd
 import numpy as np
 
-from XrayScraper import XrayScraper
-from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
+from XrayCollector import XrayCollector
+from consts import CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
 from utils.general import extract_remaining
 
-xscraper = XrayScraper(headless=False, workers=2)
+xcollector = XrayCollector(headless=False, workers=2)
 
-# change the target dir to scrape different links
+# change the target dir to collect different links
 TARGET_DIR = AFTER_2020
 
 # check if the storage location exists, if not create it
@@ -28,4 +28,4 @@ extract_df = extract_remaining(df, METADATA_DIR, TARGET_DIR)
 # check = pd.read_csv("check.csv")
 # extract_df = df[df['fname'].isin(check['file'].str.replace(".html", ""))]
 
-xscraper.run_workers(extract_df, FOR="metadata", SAVE_DIR=TARGET_DIR, PARENT_DIR=METADATA_DIR)
+xcollector.run_workers(extract_df, FOR="metadata", SAVE_DIR=TARGET_DIR, PARENT_DIR=METADATA_DIR)

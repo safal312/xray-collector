@@ -1,1 +1,1 @@
-from .XrayScraper import XrayScraper
+from .XrayCollector import XrayCollector

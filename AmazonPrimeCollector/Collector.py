@@ -5,7 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-class Scraper:
+class Collector:
     def __init__(self, headless=True, fast_load=False):
         self.options = Options()
 

@@ -5,14 +5,14 @@ sys.path.append('../')
 
 import pandas as pd
 
-from XrayScraper import XrayScraper
-from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
+from XrayCollector import XrayCollector
+from consts import CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
 from utils.general import get_remaining_xrays
 
-xscraper = XrayScraper(headless=False, workers=2)
+xcollector = XrayCollector(headless=False, workers=2)
 
-TARGET_DIR = CLEAN_SCRAPE_DIR
+TARGET_DIR = CLEAN_BASE_DIR
 
 METADATA_DIR = "../data/3_metadata_with_xray"
 
@@ -29,4 +29,4 @@ if not os.path.exists(PARENT_SAVE_DIR): os.mkdir(PARENT_SAVE_DIR)
 
 extract_df = get_remaining_xrays(df, TARGET_DIR, xray_dir=PARENT_SAVE_DIR)
 
-xscraper.run_workers(df, FOR="xrays", SAVE_DIR=TARGET_DIR, PARENT_DIR=PARENT_SAVE_DIR)
+xcollector.run_workers(df, FOR="xrays", SAVE_DIR=TARGET_DIR, PARENT_DIR=PARENT_SAVE_DIR)

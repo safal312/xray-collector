@@ -2,11 +2,11 @@ import os
 import sys
 sys.path.append("../")
 
-from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
+from consts import CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
 import pandas as pd
 
-for TARGET_DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
+for TARGET_DIR in [CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
     df_target = pd.read_csv(f"../data/4_parsed_xrays/{TARGET_DIR}/movies_with_xrays.csv")
 
     target_path = f"../data/4_parsed_xrays/{TARGET_DIR}"

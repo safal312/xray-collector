@@ -90,7 +90,7 @@ def handler(df_sub, lock):
             df.to_csv(outfile, mode='a', header=not os.path.exists(outfile), index=False)
 
 # start matching in parallel with 3 workers
-def scrape_concurrent(main_df, WORKERS=1):
+def collect_concurrent(main_df, WORKERS=1):
     lock = Lock()
 
     files = np.array_split(main_df, WORKERS)
@@ -98,4 +98,4 @@ def scrape_concurrent(main_df, WORKERS=1):
     with ThreadPoolExecutor(max_workers=WORKERS) as executor:
         executor.map(handler, files, [lock] * WORKERS)
 
-scrape_concurrent(df_sub)
+collect_concurrent(df_sub)

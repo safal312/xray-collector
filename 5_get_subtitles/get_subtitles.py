@@ -5,8 +5,8 @@ import os
 import sys
 sys.path.append("../")
 
-from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
-TARGETS = [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]
+from consts import CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
+TARGETS = [CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]
 
 # check and create subtitles directory
 SUBTITLES_DIR = "../data/5_subtitles/"

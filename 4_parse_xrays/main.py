@@ -7,10 +7,10 @@ sys.path.append("../")
 
 import pandas as pd
 
-from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
+from consts import CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
 # iterate over each sub-directory
-for TARGET_DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
+for TARGET_DIR in [CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
     xrays_dir = f"../data/3_xrays/{TARGET_DIR}"
     playback_file = "PlaybackResources.json"
     xray_file = "Xray.json"

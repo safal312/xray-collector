@@ -46,6 +46,6 @@
         - `../data/3_xrays/{target_dir}/{movie_dir}/PlaybackResources.json`: Playback Resources file of a movie which has movie metadata like title, synopsis, link to subtitles (if available) , runtime, and other additional details unique to prime video.
         - `../data/3_xrays/{target_dir}/{movie_dir}/Xray.json`: Xray file of a movie which has the list of scenes and the cast in each of the scenes. It also has duration of the scenes and the imdb name ID of each cast member.
 
-- `XrayScraper/XrayScraper.py`: This file contains the main helper class which allows you to scrape both the metadata (movie main page) and the playback with xray files.
+- `XrayCollector/XrayCollector.py`: This file contains the main helper class which allows you to collect both the metadata (movie main page) and the playback with xray files.
 
-- `cookies.pkl`: The scripts `get_video_data.py` and `get_xrays` need to login to your Amazon account before starting scraping. The `cookies.pkl` file is generated if it is missing in the directory when you run the script. On first run, the scripts will navigate you to the login page. After successful login, the cookie will be saved for easier use in the future.
+- `cookies.pkl`: The scripts `get_video_data.py` and `get_xrays` need to login to your Amazon account before starting collecting. The `cookies.pkl` file is generated if it is missing in the directory when you run the script. On first run, the scripts will navigate you to the login page. After successful login, the cookie will be saved for easier use in the future.

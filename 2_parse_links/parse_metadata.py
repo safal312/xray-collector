@@ -3,7 +3,7 @@ import sys
 sys.path.append('../')
 
 from AmazonPagesHandler import AmazonPagesHandler
-from consts import ALL_LINKS_DIR, CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S,AFTER_2020
+from consts import ALL_LINKS_DIR, CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S,AFTER_2020
 
 METADATA_DIR = "../data/2_metadata"
 for TARGET_DIR in [BEFORE_2010_DIR]:

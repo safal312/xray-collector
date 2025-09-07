@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append("../")
 
-from consts import CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
+from consts import CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020
 
 import pandas as pd
 import pandas.io.common
@@ -13,7 +13,7 @@ people_in_scenes_counter = []
 both = []
 df_temp = pd.DataFrame()
 
-for DIR in [CLEAN_SCRAPE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
+for DIR in [CLEAN_BASE_DIR, BEFORE_2010_DIR, IN_2010S, AFTER_2020]:
     TARGET_DIR = f"../data/4_parsed_xrays/{DIR}"
 
     for item in os.listdir(TARGET_DIR):
